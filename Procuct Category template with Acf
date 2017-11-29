@@ -1,0 +1,77 @@
+<?php
+//Template Name:Products with Category
+get_header();?>
+
+<div style="background-color: transparent !important; background-image: url('<?php the_field('background_cover_image'); ?>') !important; background-repeat: repeat !important; background-attachment: scroll !important; background-clip: border-box !important; background-origin: padding-box !important; background-size: cover; background-position: 48% 0%;" class="inner_baner">
+   <div class="pagetopcont">
+            <div class="wraper">
+        	<h3>Computer </h3>
+        </div><!-- wraper ends -->
+        <div class="clr"></div>
+        
+    </div><!-- pagetopcont ends -->
+</div>
+
+<div class="inner_page">
+	<div class="wraper">
+
+	  <div class="right_cat">
+	  <h2><?php the_title();?></h2>
+	 
+      </div>   <!---right_cat--> 
+      <div class="rt_ul">
+      
+	
+    
+
+		
+			    <ul class="products">
+	<?php
+	$pc = get_field('product_category', false, false);
+        $args = array(
+                'post_type' => 'product',
+                'posts_per_page' => -1,  //show all posts
+                'tax_query' => array(
+                    array(
+                        'taxonomy' => 'product_cat',
+                        'field' => 'id',
+                        'terms' => $pc
+                    )
+                )
+ 
+            );
+          
+        $posts = new WP_Query($args);
+ 
+        if( $posts->have_posts() ): while( $posts->have_posts() ) : $posts->the_post(); ?>
+         <?php //wc_get_template_part( 'content', 'product' ); ?>
+                        <?php $price = get_post_meta( get_the_ID(), '_regular_price', true); ?>
+			<li>
+						<div class="txt_sec">
+							  <div class="txt_img">
+								  <?php if ( has_post_thumbnail() ) { ?><!-- check if the post has a Post Thumbnail assigned to it.-->
+								  <?php the_post_thumbnail( 'medium' ); } ?>
+							  </div>
+							  <div class="txt_txt">
+								  <a href="<?php the_permalink(); ?>"><h3><?php the_title();?></h3></a>
+								  <div class="desc_txt">
+								  <span><b>Price: </b>$<?php echo $price; ?></span>
+								  <a href="<?php the_permalink(); ?>" class="pro_addct add_ct">Buy Now</a>
+								  <br class="clr"/>
+								  </div>
+							  </div>
+						 </div><!--txt_sec -->
+					</li>
+				
+		 <?php endwhile; endif; ?>
+		<?php
+		wp_reset_postdata();
+	?>
+</ul><!--/.products-->
+    
+              
+      
+                </div><!-- wrapper -->
+	 </div><!--ineer_page-->
+
+<?php get_footer();?>
